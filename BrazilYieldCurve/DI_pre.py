@@ -15,22 +15,22 @@ def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
             table = soup.find('table')
-            print('\n',table)
-            if table:
-                rows = table.find_all('tr')
-                print('\n',rows)
+            if table is not None:
+                rows = table.find_all('td')
                 if len(rows) > 1:
                     data = []
-                    for row in rows[1:]:
-                        cols = row.find_all('td')
+                    for row in rows[:]:
+                        print('\n==================',row,'==================\n')
+
+                        cols = row.find_all('tr')
                         data.append([col.text.strip().replace(".", "").replace(",", ".") for col in cols])
                     data = np.array(data, dtype=float)
-                    t = data[:, 0] / 21
-                    y = data[:, 1]
-                    spl = UnivariateSpline(t, y)
-                    t_new = np.array(Maturities)
-                    new = spl(t_new)
-                    mat[i, :] = new
+                    # t = data[:, 0] / 21
+                    # y = data[:, 1]
+                    # spl = UnivariateSpline(t, y)
+                    # t_new = np.array(Maturities)
+                    # new = spl(t_new)
+                    # mat[i, :] = new
                     print(f"Processed {date_str}")
                 else:
                     print(f"No data for {date_str}")
@@ -46,7 +46,7 @@ def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
     df.to_csv(output_file)
 
 # Example
-Initial_Date = '2019-01-01'  # Available from 2003-08-08. YYYY-MM-DD
+Initial_Date = '2023-10-25'  # Available from 2003-08-08. YYYY-MM-DD
 Final_Date = '2023-10-25'
 Maturities = [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 48, 60, 72]
 output_file = 'output.csv'
