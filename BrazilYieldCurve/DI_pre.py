@@ -19,12 +19,22 @@ def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
                 rows = table.find_all('td')
                 if len(rows) > 1:
                     data = []
-                    for row in rows[:]:
-                        print('\n==================',row,'==================\n')
+                    data_aux = []
+                    count = 0
+                    for row in rows[0:6]:
+                        count += 1
+                        value = float(row.get_text().replace(",", "."))
+                        data_aux.append(value)
+                        print('\n==================',data_aux,'==================\n')
 
+                        if count == 3:
+                            data.append(data_aux)
+                            data_aux = []
+                            count = 0
+                        print(data)
                         cols = row.find_all('tr')
-                        data.append([col.text.strip().replace(".", "").replace(",", ".") for col in cols])
-                    data = np.array(data, dtype=float)
+                        # data.append([col.text.strip().replace(".", "").replace(",", ".") for col in cols])
+                    # data = np.array(data, dtype=float)
                     # t = data[:, 0] / 21
                     # y = data[:, 1]
                     # spl = UnivariateSpline(t, y)
