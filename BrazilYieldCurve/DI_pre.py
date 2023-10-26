@@ -20,11 +20,13 @@ def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
                 if len(rows) > 1:
                     data = []
                     for row in rows[:]:
-                        print('\n==================',row,'==================\n')
-
+                        if len(row) > 0:
+                            print('\n',row,'\n')
                         cols = row.find_all('tr')
+                        #print('\n',cols,'\n')
                         data.append([col.text.strip().replace(".", "").replace(",", ".") for col in cols])
                     data = np.array(data, dtype=float)
+                    
                     # t = data[:, 0] / 21
                     # y = data[:, 1]
                     # spl = UnivariateSpline(t, y)
