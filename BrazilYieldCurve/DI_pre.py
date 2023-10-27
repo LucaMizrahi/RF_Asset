@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import numpy as np
-from scipy.interpolate import UnivariateSpline
+from scipy.interpolate import *
 import pandas as pd
 
 def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
@@ -30,7 +30,7 @@ def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
                 data_to_array = data.to_numpy()
                 t = np.array(data_to_array[:, 0], dtype=int) / 21
                 y = np.array(data_to_array[:, 1], dtype=float)
-                spl = UnivariateSpline(t, y, s=0)
+                spl = make_smoothing_spline(t, y)
                 t_new = np.array(Maturities)
                 new = spl(t_new)
                 
@@ -55,8 +55,9 @@ def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
     df.to_csv(output_file)
 
 # Example
-Initial_Date = '2023/08/25'  # Available from 2003-08-08. YYYY-MM-DD
-Final_Date = '2023/10/25'
+Initial_Date = '2019/01/01'  # Available from 2003-08-08. YYYY-MM-DD
+Final_Date = '2019/07/08'
+
 Maturities = [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 48, 60, 72]
 output_file = 'output.csv'
 
