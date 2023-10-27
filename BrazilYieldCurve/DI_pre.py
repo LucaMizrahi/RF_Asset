@@ -5,9 +5,10 @@ from scipy.interpolate import UnivariateSpline
 import pandas as pd
 
 def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
-    dates = pd.date_range(Initial_Date, Final_Date)
+    dates = pd.date_range(start=Initial_Date, end=Final_Date, freq='D').strftime('%d-%m-%Y').tolist()
     mat = np.empty((len(dates), len(Maturities)))
 
+    # Scrape the data from the BM&F website
     for i, date in enumerate(dates):
         date_str = date.strftime('%d/%m/%Y')
         url = f'https://www2.bmf.com.br/pages/portal/bmfbovespa/lumis/lum-taxas-referenciais-bmf-ptBR.asp?Data={date_str}'
