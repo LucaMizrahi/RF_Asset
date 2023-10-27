@@ -9,46 +9,35 @@ def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
     mat = np.empty((len(dates), len(Maturities)))
 
     # Scrape the data from the BM&F website
-    for i, date in enumerate(dates):
-        date_str = date.strftime('%d/%m/%Y')
-        url = f'https://www2.bmf.com.br/pages/portal/bmfbovespa/lumis/lum-taxas-referenciais-bmf-ptBR.asp?Data={date_str}'
+    for date in (dates):
+        url = f'https://www2.bmf.com.br/pages/portal/bmfbovespa/lumis/lum-taxas-referenciais-bmf-ptBR.asp?Data={date}'
         response = requests.get(url)
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
             table = soup.find('table')
             if table is not None:
                 rows = table.find_all('td')
-                if len(rows) > 1:
-                    data = []
-                    data_aux = []
-                    count = 0
-                    for row in rows[0:6]:
-                        count += 1
-                        value = float(row.get_text().replace(",", "."))
-                        data_aux.append(value)
-                        print('\n==================',data_aux,'==================\n')
+                td_text = [td.get_text() for td in rows]
+                #print(td_text)
+                # Cria a matriz data que será usada para criar a spline
+                data = pd.DataFrame({'Dias Corridos': td_text[::3],
+                    'V2': [float(td_text[i].replace(',', '.')) for i in range(1, len(td_text), 3)],
+                    'V3': [float(td_text[i].replace(',', '.')) for i in range(2, len(td_text), 3)]})
+                print(data)
 
-                        if count == 3:
-                            data.append(data_aux)
-                            data_aux = []
-                            count = 0
-                        print(data)
-                        cols = row.find_all('tr')
-                        # data.append([col.text.strip().replace(".", "").replace(",", ".") for col in cols])
-                    # data = np.array(data, dtype=float)
-                    # t = data[:, 0] / 21
-                    # y = data[:, 1]
-                    # spl = UnivariateSpline(t, y)
-                    # t_new = np.array(Maturities)
-                    # new = spl(t_new)
-                    # mat[i, :] = new
-                    print(f"Processed {date_str}")
-                else:
-                    print(f"No data for {date_str}")
+                
+                    # data.append([col.text.strip().replace(".", "").replace(",", ".") for col in cols])
+                # data = np.array(data, dtype=float)
+                # t = data[:, 0] / 21
+                # y = data[:, 1]
+                # spl = UnivariateSpline(t, y)
+                # t_new = np.array(Maturities)
+                # new = spl(t_new)
+                # mat[i, :] = new
             else:
-                print(f"No tables found for {date_str}")
+                print(f"No tables found for {date}")
         else:
-            print(f"Failed to retrieve data for {date_str}")
+            print(f"Failed to retrieve data for {date}")
 
     # Create a DataFrame with the results
     df = pd.DataFrame(mat, columns=[f'M{m}' for m in Maturities], index=dates)
