@@ -28,7 +28,7 @@ def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
                 
                 # Realiza a interpolação dos dados e cria a matriz de retorno
                 data_to_array = data.to_numpy()
-                t = np.array(data_to_array[:, 0], dtype=int) / 21
+                t = np.array(data_to_array[:, 0], dtype=int) # / 21
                 y = np.array(data_to_array[:, 1], dtype=float)
                 spl = make_smoothing_spline(t, y)
                 t_new = np.array(Maturities)
@@ -44,7 +44,7 @@ def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
             print(f"Failed to retrieve data for {date}")
 
     # Create a DataFrame with the results
-    colnames = [f"M{m}" for m in Maturities]
+    colnames = [f"D{m}" for m in Maturities]
     mat = mat[np.apply_along_axis(np.isfinite, 1, mat).all(axis=1)]
 
     # Constrói DataFrame final e salva em CSV
@@ -55,10 +55,12 @@ def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
     df.to_csv(output_file)
 
 # Example
-Initial_Date = '2019/01/01'  # Available from 2003-08-08. YYYY-MM-DD
-Final_Date = '2019/07/08'
+Initial_Date = '2023/10/31'  # Available from 2003-08-08. YYYY-MM-DD
+Final_Date = '2023/10/31'
 
-Maturities = [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 48, 60, 72]
+#Maturities = [1, 2, 3, 4, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 48, 60, 72]
+
+Maturities = np.arange(1, 13430, 1)
 output_file = 'output.csv'
 
 yieldsbr(Initial_Date=Initial_Date, Final_Date=Final_Date, Maturities=Maturities, output_file=output_file)
