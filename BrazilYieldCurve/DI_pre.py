@@ -51,16 +51,16 @@ def yieldsbr(Initial_Date, Final_Date, Maturities, output_file):
     df = pd.DataFrame(mat, index=dates, columns=colnames)
     print(df)
 
-    # Save the DataFrame to a CSV file
-    df.to_csv(output_file)
+    # Save the DataFrame to a xlsx file
+    df.to_excel(output_file, index=False)
 
 # Example
-Initial_Date = '2023/10/31'  # Available from 2003-08-08. YYYY-MM-DD
-Final_Date = '2023/10/31'
+Initial_Date = '2023/11/10'  # Available from 2003-08-08. YYYY-MM-DD
+Final_Date = '2023/11/10'
 
 #Maturities = [1, 2, 3, 4, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 48, 60, 72]
 
-Maturities = np.arange(1, 13430, 1)
-output_file = 'output.csv'
+Maturities = np.arange(1, 13431, 1)
+output_file = 'output.xlsx'
 
 yieldsbr(Initial_Date=Initial_Date, Final_Date=Final_Date, Maturities=Maturities, output_file=output_file)
