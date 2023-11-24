@@ -47,19 +47,19 @@ def yieldsbr(Initial_Date, Final_Date, Maturities, output_file, modo):
 
     elif modo == 'projecao':
         #Abre o arquivo de projeção utilizando o Pandas
-        df = pd.read_excel('excel/Projecao.xlsx')
+        df = pd.read_excel('Projecao.xlsx')
         print(df)
 
-    # # Create a DataFrame with the results
-    # colnames = [f"D{m}" for m in Maturities]
-    # mat = mat[np.apply_along_axis(np.isfinite, 1, mat).all(axis=1)]
+    # Create a DataFrame with the results
+    colnames = [f"D{m}" for m in Maturities]
+    mat = mat[np.apply_along_axis(np.isfinite, 1, mat).all(axis=1)]
 
-    # # Constrói DataFrame final e salva em CSV
-    # df = pd.DataFrame(mat, index=dates, columns=colnames)
-    # print(df)
+    # Constrói DataFrame final e salva em CSV
+    df = pd.DataFrame(mat, index=dates, columns=colnames)
+    print(df)
 
-    # # Save the DataFrame to a xlsx file
-    # df.to_excel(output_file, index=False)
+    # Save the DataFrame to a xlsx file
+    df.to_excel(output_file, index=False)
 
 # Example
 Initial_Date = '2023/11/24'  # Available from 2003-08-08. YYYY-MM-DD
